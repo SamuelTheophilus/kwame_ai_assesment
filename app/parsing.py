@@ -48,7 +48,7 @@ for metadata_file in legal_metadata:
 
 # Writing passages and metadata into passage_metadata.csv 
 passage_metadata_path = os.path.join(project_root, "docs", "passage_metadata.csv")
-with open(passage_metadata_path, "a", encoding = "utf-8") as csv_file:
+with open(passage_metadata_path, "a", encoding = "utf-8", newline = '') as csv_file:
     headers = ["Passage", "Metadata"]
     writer = csv.DictWriter(csv_file,fieldnames= headers)
     writer.writeheader()
