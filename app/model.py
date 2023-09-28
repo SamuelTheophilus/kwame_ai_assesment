@@ -6,13 +6,12 @@ from sentence_transformers import SentenceTransformer
 model_name = "all-mpnet-base-v2"
 model = SentenceTransformer(model_name)
 
+if __name__ == "__main__":
+    ## Creating and storing embeddings for passages
+    project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    passage_metadata_path = os.path.join(project_root, "docs", "passage_metadata.csv")
 
-project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-
-
-## Creating and storing embeddings for passages
-passage_metadata_path = os.path.join(project_root, "docs", "passage_metadata.csv")
-with open(passage_metadata_path, "r", encoding = "utf-8") as file:
+    with open(passage_metadata_path, "r", encoding = "utf-8") as file:
         csv_reader = csv.reader(file)
         next(csv_reader, None)
         
