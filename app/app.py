@@ -90,7 +90,6 @@ def extract_text_and_metadata(uploaded_file, file_type: str):
             logger.error(f"Error occured while extracting text and metadata {traceback.print_exc()}")
             return None, None
 
-
 if __name__ == "__main__":
     app.run(debug=app.config["DEBUG"], port=4000)
 

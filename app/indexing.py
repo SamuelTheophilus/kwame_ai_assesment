@@ -8,13 +8,21 @@ from elasticsearch import Elasticsearch
 import traceback
 from logger import logging_setup
 from parsing import read_files, divide_passage_into_chunks
+
+from flask import Flask
+from config import get_config
+
+app = Flask(__name__)
+app.config.from_object(get_config())
+elastic_search_url = app.config["ELASTIC_SEARCH_URL"]
+
+
 # from app import app
 
 
 # Set up indexing logger.
 logger = logging_setup(logging.DEBUG)
 
-# elastic_search_url = app.get_config["ELASTIC_SEARCH_URL"]
 
 # Set up index name and mapping.
 index_name = "passage_embeddings_idx"
@@ -40,7 +48,7 @@ index_mapping = {
 while True:  # Keep pinging the elastic search server until connection is made.
     try:
         logger.debug("Setting up connection to elastic search")
-        es = Elasticsearch("http://localhost:9200")
+        es = Elasticsearch(elastic_search_url)
         if es.info():
             logger.info("Succesfully connected to elastic search")
             print("Connection Successful")
