@@ -1,6 +1,8 @@
-/env
+env/
+docs/
 /Legal_Files
 Index.ipynb
 Parsing.ipynb
 Generating-Passage-Embeddings.ipynb
-./docs.ipynb_checkpoints
+ipynb_checkpoints/
+.idea/
