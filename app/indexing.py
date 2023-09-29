@@ -23,7 +23,18 @@ index_mapping = {
     }
 }
 
+# def index_document(document_id, document_text):
+#     # Define the document to be indexed
+#     doc = {
+#         'document_id': document_id,
+#         'document_text': document_text
+#     }
 
+#     # Index the document into Elasticsearch
+#     es.index(index='your_index_name', doc_type='_doc', id=document_id, body=doc)
+
+#     # Refresh the index to make the data available for searching
+#     es.indices.refresh(index='your_index_name')
 
 
 while True: #Keep pinging the elastic search server until connection is made.

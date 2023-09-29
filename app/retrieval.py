@@ -28,18 +28,18 @@ def retrieve_passages(index_name,question, top_k = 3, model = model):
 
     return passages, relevance_scores, passage_metadata
 
+if __name__ == "__main__":
+    print("Starting example")
+    ## Example 
+    question = "What is a valid offer?"
+    passages, relevance_scores, meta_data = retrieve_passages(index_name = index_name, question=question)
+    csv_data = []
+    results_df = pd.DataFrame({"Question": [question]})
+    for i in range(len(passages)):
+        results_df[f"Passage {i+1}"] = passages[i],
+        results_df[f"Relevance Score {i+1}"] =  relevance_scores[i],
+        results_df[f"Passage {i+1} Metadata"] = json.dumps(meta_data[i])
 
-print("Starting example")
-## Example 
-question = "What is a valid offer?"
-passages, relevance_scores, meta_data = retrieve_passages(index_name = index_name, question=question)
-csv_data = []
-results_df = pd.DataFrame({"Question": [question]})
-for i in range(len(passages)):
-    results_df[f"Passage {i+1}"] = passages[i],
-    results_df[f"Relevance Score {i+1}"] =  relevance_scores[i],
-    results_df[f"Passage {i+1} Metadata"] = json.dumps(meta_data[i])
-
-project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-question_answers_file = os.path.join(project_root, "docs", "question_answering.csv")
-results_df.to_csv(question_answers_file, index= False, encoding = "utf-8")
+    project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    question_answers_file = os.path.join(project_root, "docs", "question_answering.csv")
+    results_df.to_csv(question_answers_file, index= False, encoding = "utf-8")
