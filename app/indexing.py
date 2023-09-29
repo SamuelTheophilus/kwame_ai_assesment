@@ -3,6 +3,8 @@ import json
 import os
 import time
 from elasticsearch import Elasticsearch
+from model import model
+from parsing import read_files, divide_passage_into_chunks
 
 index_name = "passage_embeddings_idx"
 index_mapping = {
@@ -23,19 +25,6 @@ index_mapping = {
     }
 }
 
-# def index_document(document_id, document_text):
-#     # Define the document to be indexed
-#     doc = {
-#         'document_id': document_id,
-#         'document_text': document_text
-#     }
-
-#     # Index the document into Elasticsearch
-#     es.index(index='your_index_name', doc_type='_doc', id=document_id, body=doc)
-
-#     # Refresh the index to make the data available for searching
-#     es.indices.refresh(index='your_index_name')
-
 
 while True:  # Keep pinging the elastic search server until connection is made.
     try:
@@ -47,6 +36,22 @@ while True:  # Keep pinging the elastic search server until connection is made.
         print(f"Connection error: {str(e)}\n")
 
     time.sleep(5)
+
+def index_document(text: str, metadata: json):
+    formatted_text = read_files(text)
+    chunks = divide_passage_into_chunks(formatted_text)
+
+    for chunk in chunks.values():
+        passage_embeddings = model.encode(chunk)
+        doc = {
+            'passage': chunk,
+            'metadata': metadata,
+            'embeddings': passage_embeddings
+
+        }
+        es.index(index=index_name, body=doc)
+
+    es.indices.refresh(index=index_name)
 
 if __name__ == "__main__":
     # Defining document structure
