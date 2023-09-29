@@ -28,6 +28,23 @@ def receive_question():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+@app.post('/api/upload-document',)
+def upload_document():
+    try:
+        data = request.get_json()
+        document_id = data.get('document_id')
+        document_text = data.get('document_text')
+
+        if not document_id or not document_text:
+            return jsonify({'error': 'Missing document_id or document_text'}), 400
+
+        # Index the document into Elasticsearch
+        index_document(document_id, document_text)
+
+        return jsonify({'message': 'Document uploaded and indexed successfully'}), 201
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 if __name__ == "__main__":
     app.run(debug=True, port=4000)
