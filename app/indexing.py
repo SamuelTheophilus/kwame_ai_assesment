@@ -1,11 +1,20 @@
+import os
 import csv
 import json
-import os
 import time
-from elasticsearch import Elasticsearch
+import logging
 from model import model
+from elasticsearch import Elasticsearch
+from logger import logging_setup
 from parsing import read_files, divide_passage_into_chunks
 
+
+# Set up indexing logger.
+logger = logging_setup(logging.DEBUG)
+
+
+
+# Set up index name and mapping.
 index_name = "passage_embeddings_idx"
 index_mapping = {
     "mappings": {
@@ -28,30 +37,39 @@ index_mapping = {
 
 while True:  # Keep pinging the elastic search server until connection is made.
     try:
+        logger.debug("Setting up connection to elastic search")
         es = Elasticsearch("http://localhost:9200")
         if es.info():
+            logger.info("Succesfully connected to elastic search")
             print("Connection Successful")
             break
     except Exception as e:
-        print(f"Connection error: {str(e)}\n")
+        logger.error(f"Connection error: {str(e)}\n")
 
     time.sleep(5)
 
 def index_document(text: str, metadata: json):
-    formatted_text = read_files(text)
-    chunks = divide_passage_into_chunks(formatted_text)
+    logger.debug("Indexing document into elastic search")
+    try:
+        formatted_text = read_files(text)
+        chunks = divide_passage_into_chunks(formatted_text)
 
-    for chunk in chunks.values():
-        passage_embeddings = model.encode(chunk)
-        doc = {
-            'passage': chunk,
-            'metadata': metadata,
-            'embeddings': passage_embeddings
+        for chunk in chunks.values():
+            passage_embeddings = model.encode(chunk)
+            doc = {
+                'passage': chunk,
+                'metadata': metadata,
+                'embeddings': passage_embeddings
 
-        }
-        es.index(index=index_name, body=doc)
+            }
+            es.index(index=index_name, body=doc)
 
-    es.indices.refresh(index=index_name)
+        es.indices.refresh(index=index_name)
+
+        logger.info("Documents index")
+    except Exception as e:
+        logger.error(f"Error ::\n {str(e)}")
+        logger.error(f"Error traceback ::\n {str(traceback.print_exc())}")
 
 if __name__ == "__main__":
     # Defining document structure

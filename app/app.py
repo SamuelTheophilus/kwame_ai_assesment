@@ -1,11 +1,15 @@
-import docx
+import os
 import traceback
+import logging
 from model import model
 from PyPDF2 import PdfReader
 from retrieval import retrieve_passages
 from indexing import index_name, index_document
+from logger import logging_setup
 from flask import Flask, request, jsonify, make_response
 
+# Setting up logger
+logger = logging_setup(logging.DEBUG)
 
 app = Flask(__name__)
 
@@ -30,7 +34,9 @@ def receive_question():
         return jsonify({'passages': passages}), 200
 
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        logger.error(f"Error occured while fetching passages {traceback.print_exc()}")
+        logger.error(f"Error occured while extracting text and metadata {str(e)}")
+        return jsonify({'error': "Error occured while extracting passages"}), 500
 
 
 @app.post('/api/upload-document')
@@ -49,7 +55,7 @@ def upload_document():
         index_document(text, metadata)
         return make_response(jsonify({"Success": "Your File has been successfully indexed"}), 200)
     except Exception as e:
-        traceback.print_exc()
+        logger.error(f"Error occured while uploading document {traceback.print_exc()}")
         return make_response(jsonify({"Error": "error occured while processing file"}), 500)
     
 
@@ -63,7 +69,7 @@ def extract_text_and_metadata(uploaded_file, file_type: str):
             text = page.extract_text()
             print(text)
         except Exception as e:
-            print(f"Error {e}")
+            logger.error(f"Error occured while extracting text and metadata {traceback.print_exc()}")
             traceback.print_exc()
             return None, None
         
@@ -77,7 +83,7 @@ def extract_text_and_metadata(uploaded_file, file_type: str):
             return text, metadata
         
         except Exception as e:
-            traceback.print_exc()
+            logger.error(f"Error occured while extracting text and metadata {traceback.print_exc()}")
             return None, None
 
 
