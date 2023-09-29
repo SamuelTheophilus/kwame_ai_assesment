@@ -17,9 +17,6 @@ app.config.from_object(get_config())
 elastic_search_url = app.config["ELASTIC_SEARCH_URL"]
 
 
-# from app import app
-
-
 # Set up indexing logger.
 logger = logging_setup(logging.DEBUG)
 
