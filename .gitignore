@@ -7,3 +7,5 @@ Generating-Passage-Embeddings.ipynb
 ipynb_checkpoints/
 .idea/
 logs/
+app/__pycache__
+.env

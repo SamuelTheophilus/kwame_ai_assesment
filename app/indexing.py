@@ -5,14 +5,16 @@ import time
 import logging
 from model import model
 from elasticsearch import Elasticsearch
+import traceback
 from logger import logging_setup
 from parsing import read_files, divide_passage_into_chunks
+# from app import app
 
 
 # Set up indexing logger.
 logger = logging_setup(logging.DEBUG)
 
-
+# elastic_search_url = app.get_config["ELASTIC_SEARCH_URL"]
 
 # Set up index name and mapping.
 index_name = "passage_embeddings_idx"

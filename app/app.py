@@ -7,11 +7,15 @@ from retrieval import retrieve_passages
 from indexing import index_name, index_document
 from logger import logging_setup
 from flask import Flask, request, jsonify, make_response
+from config import get_config
+
 
 # Setting up logger
 logger = logging_setup(logging.DEBUG)
 
 app = Flask(__name__)
+app.config.from_object(get_config())
+
 
 
 @app.get("/")
@@ -88,4 +92,5 @@ def extract_text_and_metadata(uploaded_file, file_type: str):
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=4000)
+    app.run(debug=app.config["DEBUG"], port=4000)
+
