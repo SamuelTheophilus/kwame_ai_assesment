@@ -1,9 +1,27 @@
+import os
 import csv
 import json
-import os
 import time
+import logging
+from model import model
 from elasticsearch import Elasticsearch
+import traceback
+from logger import logging_setup
+from parsing import read_files, divide_passage_into_chunks
 
+from flask import Flask
+from config import get_config
+
+app = Flask(__name__)
+app.config.from_object(get_config())
+elastic_search_url = app.config["ELASTIC_SEARCH_URL"]
+
+
+# Set up indexing logger.
+logger = logging_setup(logging.DEBUG)
+
+
+# Set up index name and mapping.
 index_name = "passage_embeddings_idx"
 index_mapping = {
     "mappings": {
@@ -23,30 +41,42 @@ index_mapping = {
     }
 }
 
-# def index_document(document_id, document_text):
-#     # Define the document to be indexed
-#     doc = {
-#         'document_id': document_id,
-#         'document_text': document_text
-#     }
-
-#     # Index the document into Elasticsearch
-#     es.index(index='your_index_name', doc_type='_doc', id=document_id, body=doc)
-
-#     # Refresh the index to make the data available for searching
-#     es.indices.refresh(index='your_index_name')
-
 
 while True:  # Keep pinging the elastic search server until connection is made.
     try:
-        es = Elasticsearch("http://localhost:9200")
+        logger.debug("Setting up connection to elastic search")
+        es = Elasticsearch(elastic_search_url)
         if es.info():
+            logger.info("Succesfully connected to elastic search")
             print("Connection Successful")
             break
     except Exception as e:
-        print(f"Connection error: {str(e)}\n")
+        logger.error(f"Connection error: {str(e)}\n")
 
     time.sleep(5)
+
+def index_document(text: str, metadata: json):
+    logger.debug("Indexing document into elastic search")
+    try:
+        formatted_text = read_files(text)
+        chunks = divide_passage_into_chunks(formatted_text)
+
+        for chunk in chunks.values():
+            passage_embeddings = model.encode(chunk)
+            doc = {
+                'passage': chunk,
+                'metadata': metadata,
+                'embeddings': passage_embeddings
+
+            }
+            es.index(index=index_name, body=doc)
+
+        es.indices.refresh(index=index_name)
+
+        logger.info("Documents index")
+    except Exception as e:
+        logger.error(f"Error ::\n {str(e)}")
+        logger.error(f"Error traceback ::\n {str(traceback.print_exc())}")
 
 if __name__ == "__main__":
     # Defining document structure
