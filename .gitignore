@@ -1,5 +1,5 @@
 env/
-docs/
+docs/passage_metadata.csv
 /Legal_Files
 Index.ipynb
 Parsing.ipynb
