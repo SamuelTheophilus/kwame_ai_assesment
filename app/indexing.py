@@ -41,16 +41,17 @@ index_mapping = {
     }
 }
 
-
+print("Indexing")
 while True:  # Keep pinging the elastic search server until connection is made.
     try:
         logger.debug("Setting up connection to elastic search")
-        es = Elasticsearch(elastic_search_url)
+        es = Elasticsearch("http://elasticsearch_db:9200")
         if es.info():
             logger.info("Succesfully connected to elastic search")
             print("Connection Successful")
             break
     except Exception as e:
+        print("Error")
         logger.error(f"Connection error: {str(e)}\n")
 
     time.sleep(5)
@@ -80,7 +81,6 @@ def index_document(text: str, metadata: json):
 
 if __name__ == "__main__":
     # Defining document structure
-
     if es.indices.exists(index=index_name): es.indices.delete(index=index_name)
     es.indices.create(index=index_name, body=index_mapping)
 

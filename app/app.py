@@ -91,5 +91,5 @@ def extract_text_and_metadata(uploaded_file, file_type: str):
             return None, None
 
 if __name__ == "__main__":
-    app.run(debug=app.config["DEBUG"], port=4000)
+    app.run(debug=app.config["DEBUG"], port=8000)
 
