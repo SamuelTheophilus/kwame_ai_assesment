@@ -12,8 +12,12 @@ COPY ../requirements.txt ${PROJECT}
 
 RUN pip install -r requirements.txt
 
+COPY ../scripts/wait-for-it.sh /usr/local/bin/wait-for-it.sh
+
+RUN chmod +x /usr/local/bin/wait-for-it.sh
+
 COPY .. ${PROJECT}
 
-EXPOSE 80
+EXPOSE 8000
 
-CMD ["sh", "-c", "python ./app/app/parsing.py && python ./app/app/modelling.py && python ./app/app/indexing.py && python ./app/app/retrieval.py && python ./app/app/app.py"]
+ENTRYPOINT ["wait-for-it.sh", "elasticsearch_db:9200", "--", "bash", "-c", "cd ./app && python indexing.py && python retrieval.py && gunicorn -w 4 app:app"]
