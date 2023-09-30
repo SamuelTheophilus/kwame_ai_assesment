@@ -23,9 +23,12 @@ The project sets up an elasticsearch instance and indexes legal documents into t
 
 ### - Using a docker container.
 1. Clone the project into a directory on a local machine.
-4. Navigate into the the [app/] directory and run the command `python parsing.py` or `python3 parsing.py`
-5. Run the command `python model.py` or `python3 model.py`
-3. Navigate into the docker/ directory and run the command `docker compose up`
+2. Create a .env file and a logs/ directory in the root folder of the project.
+    * In the .env file create an environemt variable(environment) and set it to either production, development, or testing for preferred configuration.
+    * Create a logs file in the logs directory and name it logs.log
+3. Navigate into the the [app/] directory and run the command `python parsing.py` or `python3 parsing.py`
+4. Run the command `python model.py` or `python3 model.py`
+5. Navigate into the docker/ directory and run the command `docker compose up`
 
 ## Testing.
 ### - Question
