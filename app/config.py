@@ -10,6 +10,7 @@ class Config(object):
     TESTING = False
     ELASTIC_SEARCH_URL = "http://localhost:9200"
     FLASK_ENV = "production"
+    PORT = 8000
     
 class DevConfig(Config):
     DEBUG = True
