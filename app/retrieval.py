@@ -11,9 +11,11 @@ import traceback
 
 # Set up logging
 logger = logging_setup(logging.DEBUG)
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+
 
 # Retrieve relevant passages
-def retrieve_passages(index_name, question, top_k=3, model=model):
+def retrieve_passages(question, index_name=index_name, top_k=3, model=model):
     query = {
         "query": {
             "match": {
@@ -49,6 +51,8 @@ def retrieve_passages(index_name, question, top_k=3, model=model):
         logger.error(f"Error Occured while formatting results::\n {str(traceback.print_exc())}")
 
 
+
+
 if __name__ == "__main__":
     try:
         logger.debug("Testing question retieval with an example")
@@ -63,7 +67,6 @@ if __name__ == "__main__":
             results_df[f"Passage {i + 1} Metadata"] = json.dumps(meta_data[i])
 
 
-        project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
         question_answers_file = os.path.join(project_root, "docs", "question_answering.csv")
         results_df.to_csv(question_answers_file, index=False, encoding="utf-8")
 
