@@ -20,4 +20,4 @@ COPY .. ${PROJECT}
 
 EXPOSE 8000
 
-ENTRYPOINT ["wait-for-it.sh", "elasticsearch:9200", "--", "bash", "-c", "cd ./app && python indexing.py && python retrieval.py && gunicorn -w 4 app:app"]
+ENTRYPOINT ["wait-for-it.sh", "elasticsearch:9200", "--", "bash", "-c", "cd ./app && python indexing.py && python retrieval.py && gunicorn -b 0.0.0.0:8000 app:app"]

@@ -32,10 +32,10 @@ def receive_question():
             return jsonify({'error': 'Missing question'}), 400
 
         # Retrieve relevant passages using your passage retrieval logic
-        passages, _, _ = retrieve_passages(index_name, question, top_k=3, model=model)
+        passages, scores, metadata = retrieve_passages(index_name= index_name, question=question)
 
         # Return the passages as JSON response
-        return jsonify({'passages': passages}), 200
+        return jsonify({'passages': passages, "relvance_scores": scores, "metadata": metadata }), 200
 
     except Exception as e:
         logger.error(f"Error occured while fetching passages {traceback.print_exc()}")

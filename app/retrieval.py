@@ -15,7 +15,7 @@ project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 
 
 # Retrieve relevant passages
-def retrieve_passages(question, index_name=index_name, top_k=3, model=model):
+def retrieve_passages(question, index_name=index_name, top_k=5, model=model):
     query = {
         "query": {
             "match": {
@@ -23,14 +23,14 @@ def retrieve_passages(question, index_name=index_name, top_k=3, model=model):
             }
         }
     }
-    try:
-        logger.debug(f"Fetching passages with query:: {query}")
-        results = es.search(index=index_name, body=query, size=top_k)
-        logger.info(f"Successfully fetched passages with query:: {query}")
+# try:
+    logger.debug(f"Fetching passages with query:: {query}")
+    results = es.search(index="passage_embeddings_idx", body=query, size=top_k)
+    logger.info(f"Successfully fetched passages with query:: {query}")
 
-    except Exception as e:
-        logger.error(f"Error ::\n {str(e)}")
-        logger.error(f"Error Occured while retrieving passages::\n {str(traceback.print_exc())}")
+    # except Exception as e:
+    # logger.error(f"Error ::\n {str(e)}")
+    # logger.error(f"Error Occured while retrieving passages::\n {str(traceback.print_exc())}")
 
     question_embedding = model.encode(question)
 
@@ -45,6 +45,7 @@ def retrieve_passages(question, index_name=index_name, top_k=3, model=model):
             passage_metadata.append(hit["_source"]["metadata"])
 
         logger.info("Completed formatting results into passages, scores and metadata")
+        print(passages, relevance_scores, passage_metadata)
         return passages, relevance_scores, passage_metadata
     except Exception as e:
         logger.error(f"Error ::\n {str(e)}")
