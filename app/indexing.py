@@ -45,7 +45,7 @@ print("Indexing")
 while True:  # Keep pinging the elastic search server until connection is made.
     try:
         logger.debug("Setting up connection to elastic search")
-        es = Elasticsearch("http://elasticsearch_db:9200")
+        es = Elasticsearch("elasticsearch:9200")
         if es.info():
             logger.info("Succesfully connected to elastic search")
             print("Connection Successful")
