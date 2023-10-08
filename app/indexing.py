@@ -45,12 +45,14 @@ print("Indexing")
 while True:  # Keep pinging the elastic search server until connection is made.
     try:
         logger.debug("Setting up connection to elastic search")
-        es = Elasticsearch("elasticsearch:9200")
+        print("Connecting")
+        es = Elasticsearch("http://elasticsearch:9200")
         if es.info():
             logger.info("Succesfully connected to elastic search")
             print("Connection Successful")
             break
     except Exception as e:
+        print(f"Exception: {e}")
         print("Error")
         logger.error(f"Connection error: {str(e)}\n")
 
@@ -104,7 +106,7 @@ if __name__ == "__main__":
                 "embedding": embeddings
             }
 
-            es.index(index=index_name, body=document)
+            es.index(index=index_name, document=document)
 
     # Refresh the index to make the data available for searching
     es.indices.refresh(index=index_name)
