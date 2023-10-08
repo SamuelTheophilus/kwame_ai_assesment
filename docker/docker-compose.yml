@@ -1,21 +1,18 @@
 version: '3'
 services:
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.10.2
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.15.0
     container_name: elasticsearch
+    restart: always
     environment:
       - "xpack.security.enabled=false"
       - "discovery.type=single-node"
-      
     ports:
       - 9200:9200
-    healthcheck:
-      test: "curl http://elasticsearch:9200"
-      interval: 1s
-      timeout: 3s
-      retries: 5
-      start_period: 30s
-  
+      - 9300:9300
+    networks:
+      - es-network
+
   app:
     build:
       context: ..
@@ -24,7 +21,14 @@ services:
     container_name: question_answering
     ports:
       - 8000:8000
-    expose:
-      - 8000
+    # expose:
+    #   - 8000
     depends_on:
       - elasticsearch
+    networks:
+      - es-network
+
+networks:
+   es-network:
+
+
