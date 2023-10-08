@@ -19,7 +19,7 @@ The project sets up an elasticsearch instance and indexes legal documents into t
 
 ### - File Upload
 * Open an API testing tool, such as Postman/Insomnia
-* Create a post request to the endpoint `http://localhost:8000/api/upload-document` with a request body `{"file": your_file}`
+* Create a post request to the endpoint `http://localhost:8000/api/upload-document` with a mutipart file request of  `{"file": your_file}`
     - File uploads take only files with `.pdf` or `.txt` extenstions. 
 
 
