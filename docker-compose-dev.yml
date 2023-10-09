@@ -14,7 +14,7 @@ services:
       - es-network
 
   app:
-    image: samueltheophilus/kwame_ai_assessment:latest
+    image: docker.io/samueltheophilus/kwame_ai_assessment:latest
     container_name: question_answering
     ports:
       - 8000:8000
