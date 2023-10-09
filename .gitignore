@@ -9,3 +9,4 @@ ipynb_checkpoints/
 logs/
 app/__pycache__
 .env
+docker-compose.yml
