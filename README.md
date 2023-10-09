@@ -6,8 +6,8 @@ The project sets up an elasticsearch instance and indexes legal documents into t
 
 
 ## How to install and run project.
-1. Run `docker pull samueltheophilus/kwame_ai_assessment` to download the image from dockerhub
-2. Run `docker run samueltheophilus/kwame_ai_assessment` to spin a new container based on the image. 
+1. Download the `docker-compose-dev.yml`
+2. Run `docker compose -f 'path/to/docker-compose-dev.yml' up`
     * Wait for the container to start successfully, this is the message 'Connection Successful' appears on the terminal.
 
 
